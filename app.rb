@@ -30,7 +30,7 @@ def fetch_dates_and_urls
 
       # Extract the date from the PDF filename and convert to human-readable format
       date = pdf_url[/\d{12}/]
-      human_readable_date = "#{date[6..7]}-#{date[4..5]}-#{date[0..3]} #{date[8..9]}:#{date[10..11]}"
+      human_readable_date = "#{date[6..7]}-#{date[4..5]}-#{date[0..3]}"
 
       # Store the date and PDF URL in arrays
       dates << human_readable_date
