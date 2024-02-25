@@ -6,6 +6,8 @@ GEM
       ruby2_keywords (~> 0.0.1)
     nokogiri (1.16.2-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.16.2-x86_64-linux)
+      racc (~> 1.4)
     racc (1.7.3)
     rack (3.0.9.1)
     rack-protection (4.0.0)
@@ -24,6 +26,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   nokogiri
