@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Viewer</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .pdf-container {
+      width: 50%;
+      float: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="pdf-container">
+    <!-- Form to select PDF for the first iframe -->
+    <form id="pdfForm1">
+      <select name="pdf_url" id="pdfSelect1">
+        <% pdf_urls.each_with_index do |pdf_url, index| %>
+          <option value="<%= pdf_url %>"><%= dates[index] %></option>
+        <% end %>
+      </select>
+      <button type="submit">View PDF</button>
+    </form>
+
+    <!-- Iframe to display selected PDF for the first form -->
+    <iframe id="pdfIframe1" width="100%" height="600px"></iframe>
+  </div>
+
+  <div class="pdf-container">
+    <!-- Form to select PDF for the second iframe -->
+    <form id="pdfForm2">
+      <select name="pdf_url" id="pdfSelect2">
+        <% pdf_urls.each_with_index do |pdf_url, index| %>
+          <option value="<%= pdf_url %>"><%= dates[index] %></option>
+        <% end %>
+      </select>
+      <button type="submit">View PDF</button>
+    </form>
+
+    <!-- Iframe to display selected PDF for the second form -->
+    <iframe id="pdfIframe2" width="100%" height="600px"></iframe>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      // Function to handle form submission and iframe update
+      function handleFormSubmit(formId, selectId, iframeId) {
+        $(formId).submit(function(event) {
+          // Prevent default form submission
+          event.preventDefault();
+
+          // Get selected PDF URL
+          var selectedPdfUrl = $(selectId).val();
+
+          // Update iframe source with selected PDF URL
+          $(iframeId).attr('src', selectedPdfUrl);
+        });
+      }
+
+      // Call the function for each form and iframe
+      handleFormSubmit('#pdfForm1', '#pdfSelect1', '#pdfIframe1');
+      handleFormSubmit('#pdfForm2', '#pdfSelect2', '#pdfIframe2');
+    });
+  </script>
+</body>
+</html>
