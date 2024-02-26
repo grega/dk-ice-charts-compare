@@ -18,13 +18,13 @@
 
   <% if @selected_image_url %>
     <h2>Image for <%= @selected_date %></h2>
-    <iframe width="1200px" height="800px" src=<%= @selected_image_url %>></iframe>
+    <iframe width="1120px" height="790px" src="<%= @selected_image_url %>#toolbar=0&navpanes=0&scrollbar=0"></iframe>
 
     <% if @prev_images_urls.any? %>
       <h2>Images for previous dates</h2>
       <% @prev_images_urls.each do |prev_date, prev_image_url| %>
         <h3><%= prev_date %></h3>
-        <iframe width="1200px" height="800px" src=<%= prev_image_url %>></iframe>
+        <iframe width="1120px" height="790px" src="<%= prev_image_url %>#toolbar=0&navpanes=0&scrollbar=0"></iframe>
       <% end %>
     <% else %>
       <p>No images available for previous dates.</p>
