@@ -1,12 +1,11 @@
-<!-- views/test.erb -->
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Previous charts view</title>
+  <title>Previous ice charts</title>
 </head>
 <body>
   <h1>Select a date and display charts from the previous 2 months</h1>
+  <p><a href="/">Go to compare chart view</a></p>
   <form action="/previous" method="get">
     <select name="selected_date">
       <% dates.each do |date| %>
