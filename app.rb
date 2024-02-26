@@ -49,26 +49,57 @@ get '/' do
 end
 
 # Route to convert PDF to JPG
+# Route to convert PDF to JPG
 get '/pdf_to_jpg' do
   pdf_url = params[:pdf_url]
 
-  # Download PDF file
-  pdf_data = URI.open(pdf_url).read
-  pdf_path = "tmp/temp.pdf"
-  File.write(pdf_path, pdf_data)
+  # Generate a unique filename based on the PDF URL
+  jpg_filename = "#{CGI.escape(pdf_url)}.jpg"
+  jpg_path = File.join('tmp', 'images', jpg_filename)
 
-  # Convert PDF to JPG using mini_magick
-  jpg_path = "tmp/temp.jpg"
-  MiniMagick::Tool::Convert.new do |convert|
-    convert.background 'white'
-    convert.alpha 'remove'
-    convert.quality '100'
-    convert.resize '800x'
-    convert << pdf_path
-    convert << jpg_path
+  # Check if the JPG already exists
+  unless File.exist?(jpg_path)
+    # Download PDF file
+    pdf_data = URI.open(pdf_url).read
+    pdf_path = "tmp/temp.pdf"
+    File.write(pdf_path, pdf_data)
+
+    # Convert PDF to JPG using mini_magick
+    MiniMagick::Tool::Convert.new do |convert|
+      convert.background 'white'
+      convert.alpha 'remove'
+      convert.quality '100'
+      convert.resize '800x'
+      convert << pdf_path
+      convert << jpg_path
+    end
   end
 
-  # Read the converted JPG file and send it as response
+  # Serve the pre-generated JPG file
   send_file jpg_path, type: 'image/jpeg', disposition: 'inline'
 end
 
+# Route to handle form submission and display images
+get '/previous' do
+  selected_date = params[:selected_date]
+  dates, pdf_urls = fetch_dates_and_urls
+  selected_index = dates.index(selected_date)
+
+  # If selected date exists
+  if selected_index
+    @selected_date = selected_date
+    @selected_image_url = pdf_urls[selected_index]
+
+    # Fetch images for previous dates (1 to 90 days before selected date)
+    @prev_images_urls = {}
+    (1..60).each do |days_before|
+      prev_date = (Date.parse(selected_date) - days_before).strftime("%d-%m-%Y")
+      prev_index = dates.index(prev_date)
+      if prev_index
+        @prev_images_urls[prev_date] = pdf_urls[prev_index]
+      end
+    end
+  end
+
+  erb :previous, locals: { dates: dates, pdf_urls: pdf_urls }
+end

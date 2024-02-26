@@ -1,3 +1,4 @@
 tmp/*.jpg
 tmp/*.pdf
+tmp/images/*.jpg
 .DS_Store
