@@ -21,7 +21,7 @@
           <option value="<%= pdf_url %>"><%= dates[index] %></option>
         <% end %>
       </select>
-      <button type="submit">View PDF</button>
+      <button type="submit">View chart</button>
     </form>
 
     <!-- Iframe to display selected PDF for the first form -->
@@ -36,7 +36,7 @@
           <option value="<%= pdf_url %>"><%= dates[index] %></option>
         <% end %>
       </select>
-      <button type="submit">View PDF</button>
+      <button type="submit">View chart</button>
     </form>
 
     <!-- Iframe to display selected PDF for the second form -->
@@ -55,7 +55,7 @@
           var selectedPdfUrl = $(selectId).val();
 
           // Update iframe source with selected PDF URL
-          $(iframeId).attr('src', selectedPdfUrl);
+          $(iframeId).attr('src', '/pdf_to_jpg?pdf_url=' + selectedPdfUrl);
         });
       }
 

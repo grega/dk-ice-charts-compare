@@ -2,6 +2,7 @@ require 'sinatra'
 require 'nokogiri'
 require 'open-uri'
 require 'cgi'
+require 'mini_magick'
 
 # Fetch dates and PDF URLs
 def fetch_dates_and_urls
@@ -46,3 +47,28 @@ get '/' do
   @dates, @pdf_urls = fetch_dates_and_urls
   erb :index, locals: { dates: @dates, pdf_urls: @pdf_urls }
 end
+
+# Route to convert PDF to JPG
+get '/pdf_to_jpg' do
+  pdf_url = params[:pdf_url]
+
+  # Download PDF file
+  pdf_data = URI.open(pdf_url).read
+  pdf_path = "tmp/temp.pdf"
+  File.write(pdf_path, pdf_data)
+
+  # Convert PDF to JPG using mini_magick
+  jpg_path = "tmp/temp.jpg"
+  MiniMagick::Tool::Convert.new do |convert|
+    convert.background 'white'
+    convert.alpha 'remove'
+    convert.quality '100'
+    convert.resize '800x'
+    convert << pdf_path
+    convert << jpg_path
+  end
+
+  # Read the converted JPG file and send it as response
+  send_file jpg_path, type: 'image/jpeg', disposition: 'inline'
+end
+
