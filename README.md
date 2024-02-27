@@ -13,5 +13,5 @@ git push dokku main
 Having previously added the remote:
 
 ```
-git remote add origin git@github.com:grega/dk-ice-charts-compare.git
+git remote add dokku dokku@ssh.gregdev.com:dk-ice-charts-compare
 ```
