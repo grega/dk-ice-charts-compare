@@ -17,55 +17,55 @@
 <body>
   <h1>Select two dates and compare charts from each</h1>
   <p><a href="/previous">Go to "previous" chart view</a></p>
+  <p><a href="/">Reset</a></p>
   <div class="pdf-container">
-    <!-- Form to select PDF for the first iframe -->
+    <!-- select PDF for the first iframe -->
     <form id="pdfForm1">
       <select name="pdf_url" id="pdfSelect1">
         <% pdf_urls.each_with_index do |pdf_url, index| %>
-          <option value="<%= pdf_url %>"><%= dates[index] %></option>
+          <option value="<%= pdf_url %>" <%= 'selected' if pdf_url == left_pdf_url %>><%= dates[index] %></option>
         <% end %>
       </select>
       <button type="submit">View chart</button>
     </form>
 
-    <!-- Iframe to display selected PDF for the first form -->
-    <iframe id="pdfIframe1" width="100%" height="600px"></iframe>
+    <!-- iframe to display selected PDF for first form -->
+    <iframe id="pdfIframe1" width="100%" height="600px"<% if left_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(left_pdf_url) %>" <% end %>></iframe>
   </div>
 
   <div class="pdf-container">
-    <!-- Form to select PDF for the second iframe -->
+    <!-- select PDF for the second iframe -->
     <form id="pdfForm2">
       <select name="pdf_url" id="pdfSelect2">
         <% pdf_urls.each_with_index do |pdf_url, index| %>
-          <option value="<%= pdf_url %>"><%= dates[index] %></option>
+          <option value="<%= pdf_url %>" <%= 'selected' if pdf_url == right_pdf_url %>><%= dates[index] %></option>
         <% end %>
       </select>
       <button type="submit">View chart</button>
     </form>
 
-    <!-- Iframe to display selected PDF for the second form -->
-    <iframe id="pdfIframe2" width="100%" height="600px"></iframe>
+    <!-- iframe to display selected PDF for second form -->
+    <iframe id="pdfIframe2" width="100%" height="600px"<% if right_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(right_pdf_url) %>" <% end %>></iframe>
   </div>
 
   <script>
     $(document).ready(function() {
-      // Function to handle form submission and iframe update
-      function handleFormSubmit(formId, selectId, iframeId) {
+      // handle form submission and update iframes
+      function handleFormSubmit(formId, selectId, iframeId, paramName) {
         $(formId).submit(function(event) {
-          // Prevent default form submission
           event.preventDefault();
-
-          // Get selected PDF URL
           var selectedPdfUrl = $(selectId).val();
+          $(iframeId).attr('src', '/pdf_to_jpg?pdf_url=' + encodeURIComponent(selectedPdfUrl));
 
-          // Update iframe source with selected PDF URL
-          $(iframeId).attr('src', '/pdf_to_jpg?pdf_url=' + selectedPdfUrl);
+          // update the URL with the PDF for each (left/right) frame
+          const url = new URL(window.location);
+          url.searchParams.set(paramName, selectedPdfUrl);
+          window.history.replaceState({}, '', url);
         });
       }
 
-      // Call the function for each form and iframe
-      handleFormSubmit('#pdfForm1', '#pdfSelect1', '#pdfIframe1');
-      handleFormSubmit('#pdfForm2', '#pdfSelect2', '#pdfIframe2');
+      handleFormSubmit('#pdfForm1', '#pdfSelect1', '#pdfIframe1', 'left');
+      handleFormSubmit('#pdfForm2', '#pdfSelect2', '#pdfIframe2', 'right');
     });
   </script>
 </body>

@@ -28,10 +28,22 @@ def fetch_dates_and_urls
   [dates, pdf_urls]
 end
 
-# render the index page
+# the index page
 get '/' do
   @dates, @pdf_urls = fetch_dates_and_urls
-  erb :index, locals: { dates: @dates, pdf_urls: @pdf_urls }
+
+  left_param = params[:left]
+  right_param = params[:right]
+
+  @left_pdf_url = left_param if @pdf_urls.include?(left_param)
+  @right_pdf_url = right_param if @pdf_urls.include?(right_param)
+
+  erb :index, locals: {
+    dates: @dates,
+    pdf_urls: @pdf_urls,
+    left_pdf_url: @left_pdf_url,
+    right_pdf_url: @right_pdf_url
+  }
 end
 
 # convert PDF to JPG

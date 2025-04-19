@@ -4,7 +4,15 @@ The root page shows two charts of any date side by side: https://dk-ice-charts-c
 
 The /previous page shows the selected date's chart and then all charts from the previous 60 days: https://dk-ice-charts-compare.gregdev.com/previous
 
-Deploy:
+## Develop
+
+Run:
+
+```
+ruby app.rb
+```
+
+## Deploy
 
 ```
 git push dokku main
