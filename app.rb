@@ -46,10 +46,6 @@ get '/' do
     right_pdf_url = date_to_url[params[:right_date]]
   end
 
-  # fallback to latest available PDF
-  # left_pdf_url ||= @pdf_urls.first
-  # right_pdf_url ||= @pdf_urls.first
-
   erb :index, locals: {
     dates: @dates,
     pdf_urls: @pdf_urls,
