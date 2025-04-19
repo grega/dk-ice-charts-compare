@@ -59,7 +59,8 @@
 
           // update the URL with the PDF for each (left/right) frame
           const url = new URL(window.location);
-          url.searchParams.set(paramName, selectedPdfUrl);
+          const selectedDate = $(selectId + ' option:selected').text();
+          url.searchParams.set(paramName + '_date', selectedDate);
           window.history.replaceState({}, '', url);
         });
       }

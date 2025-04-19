@@ -28,23 +28,36 @@ def fetch_dates_and_urls
   [dates, pdf_urls]
 end
 
-# the index page
+# index page
 get '/' do
   @dates, @pdf_urls = fetch_dates_and_urls
+  date_to_url = @dates.zip(@pdf_urls).to_h
 
-  left_param = params[:left]
-  right_param = params[:right]
+  # try to get full PDF URLs from params
+  left_pdf_url = params[:left]
+  right_pdf_url = params[:right]
 
-  @left_pdf_url = left_param if @pdf_urls.include?(left_param)
-  @right_pdf_url = right_param if @pdf_urls.include?(right_param)
+  # or resolve from date params if present
+  if !left_pdf_url && params[:left_date]
+    left_pdf_url = date_to_url[params[:left_date]]
+  end
+
+  if !right_pdf_url && params[:right_date]
+    right_pdf_url = date_to_url[params[:right_date]]
+  end
+
+  # fallback to latest available PDF
+  # left_pdf_url ||= @pdf_urls.first
+  # right_pdf_url ||= @pdf_urls.first
 
   erb :index, locals: {
     dates: @dates,
     pdf_urls: @pdf_urls,
-    left_pdf_url: @left_pdf_url,
-    right_pdf_url: @right_pdf_url
+    left_pdf_url: left_pdf_url,
+    right_pdf_url: right_pdf_url
   }
 end
+
 
 # convert PDF to JPG
 get '/pdf_to_jpg' do
