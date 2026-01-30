@@ -9,13 +9,13 @@
   </form>
 
   <% if @selected_image_url %>
-    <h3>Image for <%= @selected_date %>:</h3>
+    <h3>Chart for <%= @selected_date %>:</h3>
     <div class="chart-container">
       <iframe src="<%= @selected_image_url %>#view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe>
     </div>
 
     <% if @prev_images_urls.any? %>
-      <h3>Images for previous dates:</h3>
+      <h3>Charts for previous dates:</h3>
       <% @prev_images_urls.each do |prev_date, prev_image_url| %>
         <div class="chart-container">
           <h4><%= prev_date %></h4>
