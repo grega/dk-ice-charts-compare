@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Previous ice charts</title>
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body class="previous-page">
-  <%= erb :_nav, locals: { active_page: 'previous', show_reset: true, reset_url: '/previous', subtitle: 'Select a date and display charts from the previous 2 months' } %>
-  <form action="/previous" method="get">
-    <select name="selected_date">
-      <% dates.each do |date| %>
+<%= erb :_nav, locals: { active_page: 'previous', show_reset: true, reset_url: '/previous', subtitle: 'Select a date and display charts from the previous 60 days' } %>
+<form action="/previous" method="get">
+    <select name="selected_date" class="previous-dates">
+      <% @dates.each do |date| %>
         <option value="<%= date %>"><%= date %></option>
       <% end %>
     </select>
@@ -18,22 +9,20 @@
   </form>
 
   <% if @selected_image_url %>
+    <h3>Image for <%= @selected_date %>:</h3>
     <div class="chart-container">
-      <h2>Image for <%= @selected_date %></h2>
-      <iframe src="<%= @selected_image_url %>#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+      <iframe src="<%= @selected_image_url %>#view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe>
     </div>
 
     <% if @prev_images_urls.any? %>
-      <h2>Images for previous dates</h2>
+      <h3>Images for previous dates:</h3>
       <% @prev_images_urls.each do |prev_date, prev_image_url| %>
         <div class="chart-container">
-          <h3><%= prev_date %></h3>
-          <iframe src="<%= prev_image_url %>#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+          <h4><%= prev_date %></h4>
+          <iframe src="<%= prev_image_url %>#view=FitH&toolbar=0&navpanes=0&scrollbar=0"></iframe>
         </div>
       <% end %>
     <% else %>
       <p>No images available for previous dates.</p>
     <% end %>
   <% end %>
-</body>
-</html>

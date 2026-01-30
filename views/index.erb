@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Compare ice charts</title>
-  <link rel="stylesheet" href="/styles.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script defer data-domain="gregdev.com" src="https://analytics.gregdev.com/js/script.file-downloads.hash.outbound-links.js"></script>
-  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
-</head>
-<body>
-  <%= erb :_nav, locals: { active_page: 'compare', show_reset: true, reset_url: '/', subtitle: 'Select two dates and compare charts from each' } %>
-  <div class="container">
+<%= erb :_nav, locals: { active_page: 'compare', show_reset: true, reset_url: '/', subtitle: 'Select two dates and compare charts from each' } %>
+<div class="container">
   <div class="pdf-container">
     <!-- select PDF for the first iframe -->
     <form id="pdfForm1">
@@ -23,8 +11,10 @@
       <button type="submit">View chart</button>
     </form>
 
-    <!-- iframe to display selected PDF for first form -->
-    <iframe id="pdfIframe1"<% if left_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(left_pdf_url) %>" <% end %>></iframe>
+    <div class="iframe-wrapper">
+      <div class="loading-spinner" id="loading1"></div>
+      <iframe id="pdfIframe1"<% if left_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(left_pdf_url) %>" <% end %>></iframe>
+    </div>
   </div>
 
   <div class="pdf-container">
@@ -38,31 +28,55 @@
       <button type="submit">View chart</button>
     </form>
 
-    <!-- iframe to display selected PDF for second form -->
-    <iframe id="pdfIframe2"<% if right_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(right_pdf_url) %>" <% end %>></iframe>
+    <div class="iframe-wrapper">
+      <div class="loading-spinner" id="loading2"></div>
+      <iframe id="pdfIframe2"<% if right_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(right_pdf_url) %>" <% end %>></iframe>
+    </div>
   </div>
-  </div>
+</div>
 
-  <script>
-    $(document).ready(function() {
-      // handle form submission and update iframes
-      function handleFormSubmit(formId, selectId, iframeId, paramName) {
-        $(formId).submit(function(event) {
-          event.preventDefault();
-          var selectedPdfUrl = $(selectId).val();
-          $(iframeId).attr('src', '/pdf_to_jpg?pdf_url=' + encodeURIComponent(selectedPdfUrl));
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const showLoading = (loaderId) => {
+      const loader = document.getElementById(loaderId);
+      if (loader) loader.style.display = 'block';
+    };
 
-          // update the URL with the PDF for each (left/right) frame
-          const url = new URL(window.location);
-          const selectedDate = $(selectId + ' option:selected').text();
-          url.searchParams.set(paramName + '_date', selectedDate);
-          window.history.replaceState({}, '', url);
-        });
-      }
+    const hideLoading = (loaderId) => {
+      const loader = document.getElementById(loaderId);
+      if (loader) loader.style.display = 'none';
+    };
 
-      handleFormSubmit('#pdfForm1', '#pdfSelect1', '#pdfIframe1', 'left');
-      handleFormSubmit('#pdfForm2', '#pdfSelect2', '#pdfIframe2', 'right');
-    });
-  </script>
-</body>
-</html>
+    const handleFormSubmit = (formId, selectId, iframeId, loaderId, paramName) => {
+      const form = document.querySelector(formId);
+      const select = document.querySelector(selectId);
+      const iframe = document.querySelector(iframeId);
+
+      if (!form || !select || !iframe) return;
+
+      // Hide loading when iframe loads
+      iframe.addEventListener('load', () => hideLoading(loaderId));
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        showLoading(loaderId);
+        const selectedPdfUrl = select.value;
+        iframe.setAttribute('src', `/pdf_to_jpg?pdf_url=${encodeURIComponent(selectedPdfUrl)}`);
+
+        // update the URL with the PDF for each (left/right) frame
+        const url = new URL(window.location);
+        const selectedDate = select.options[select.selectedIndex]?.text || '';
+        url.searchParams.set(`${paramName}_date`, selectedDate);
+        window.history.replaceState({}, '', url);
+      });
+    };
+
+    handleFormSubmit('#pdfForm1', '#pdfSelect1', '#pdfIframe1', 'loading1', 'left');
+    handleFormSubmit('#pdfForm2', '#pdfSelect2', '#pdfIframe2', 'loading2', 'right');
+
+    // Hide initial loading spinners when iframes load
+    document.getElementById('pdfIframe1')?.addEventListener('load', () => hideLoading('loading1'));
+    document.getElementById('pdfIframe2')?.addEventListener('load', () => hideLoading('loading2'));
+  });
+</script>
