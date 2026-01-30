@@ -1,0 +1,11 @@
+<div class="header">
+  <h1>South Greenland Ice Charts</h1>
+  <h2><%= subtitle %></h2>
+</div>
+<nav>
+  <a href="/" class="<%= active_page == 'compare' ? 'active' : '' %>">Compare side-by-side</a>
+  <a href="/previous" class="<%= active_page == 'previous' ? 'active' : '' %>">Previous 60 days</a>
+  <% if show_reset %>
+    <a href="<%= reset_url %>" class="reset">Reset</a>
+  <% end %>
+</nav>

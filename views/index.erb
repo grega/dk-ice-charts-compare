@@ -4,20 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Compare ice charts</title>
+  <link rel="stylesheet" href="/styles.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <style>
-    .pdf-container {
-      width: 50%;
-      float: left;
-    }
-  </style>
   <script defer data-domain="gregdev.com" src="https://analytics.gregdev.com/js/script.file-downloads.hash.outbound-links.js"></script>
   <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
 </head>
 <body>
-  <h1>Select two dates and compare charts from each</h1>
-  <p><a href="/previous">Go to "previous" chart view</a></p>
-  <p><a href="/">Reset</a></p>
+  <%= erb :_nav, locals: { active_page: 'compare', show_reset: true, reset_url: '/', subtitle: 'Select two dates and compare charts from each' } %>
+  <div class="container">
   <div class="pdf-container">
     <!-- select PDF for the first iframe -->
     <form id="pdfForm1">
@@ -30,7 +24,7 @@
     </form>
 
     <!-- iframe to display selected PDF for first form -->
-    <iframe id="pdfIframe1" width="100%" height="600px"<% if left_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(left_pdf_url) %>" <% end %>></iframe>
+    <iframe id="pdfIframe1"<% if left_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(left_pdf_url) %>" <% end %>></iframe>
   </div>
 
   <div class="pdf-container">
@@ -45,7 +39,8 @@
     </form>
 
     <!-- iframe to display selected PDF for second form -->
-    <iframe id="pdfIframe2" width="100%" height="600px"<% if right_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(right_pdf_url) %>" <% end %>></iframe>
+    <iframe id="pdfIframe2"<% if right_pdf_url %> src="/pdf_to_jpg?pdf_url=<%= CGI.escape(right_pdf_url) %>" <% end %>></iframe>
+  </div>
   </div>
 
   <script>
