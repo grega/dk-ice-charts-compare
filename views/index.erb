@@ -54,7 +54,6 @@
 
       if (!form || !select || !iframe) return;
 
-      // Hide loading when iframe loads
       iframe.addEventListener('load', () => hideLoading(loaderId));
 
       form.addEventListener('submit', (event) => {
@@ -75,7 +74,7 @@
     handleFormSubmit('#pdfForm1', '#pdfSelect1', '#pdfIframe1', 'loading1', 'left');
     handleFormSubmit('#pdfForm2', '#pdfSelect2', '#pdfIframe2', 'loading2', 'right');
 
-    // Hide initial loading spinners when iframes load
+    // hide initial loading spinners when iframes load
     document.getElementById('pdfIframe1')?.addEventListener('load', () => hideLoading('loading1'));
     document.getElementById('pdfIframe2')?.addEventListener('load', () => hideLoading('loading2'));
   });
