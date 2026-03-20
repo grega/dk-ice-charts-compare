@@ -17,9 +17,3 @@ ruby app.rb
 ```
 git push dokku main
 ```
-
-Having previously added the remote:
-
-```
-git remote add dokku dokku@ssh.gregdev.com:dk-ice-charts-compare
-```
